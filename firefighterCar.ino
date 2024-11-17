@@ -18,12 +18,16 @@
 #define pump 25           // pump
 #define servoPin 23       // servo
 
-// Variables
+/*-------Variables------*/
 String device_name = "FireFighter"; // Bluetooth device name
 Servo servo;              // servo motor
 int pos = 0;              // servo position
 bool automatic = true;    // current mode
 BluetoothSerial SerialBT; // Bluetooth connection
+
+/*-------Manual Controls------*/
+bool manualForward = false;   // Flag for forward movement
+bool manualBackward = false;  // Flag for backward movement
 
 // function prototypes
 void put_off_fire();
@@ -186,5 +190,74 @@ void automaticMode() {
 }
 
 void manualMode(String command) {
+  // Valid {command} values
+  // UP: Active move forward
+  // DOWN: Active move backward
+  // LEFT: Turn left
+  // RIGHT: Turn right
 
+  // Active the signals for forward and backward
+  if (command == "UP"){
+    if (manualForward) {
+      manualForward = false;
+    } else {
+      manualForward = true;
+    }
+    manualBackward = false;
+  } else if (command == "DOWN") {
+    if (manualBackward) {
+      manualBackward = false;
+    } else {
+      manualBackward = true;
+    }
+    manualForward = false;
+  }
+
+  // Turn the car left or right
+  if (command == "LEFT") {
+    digitalWrite(LM1, LOW);
+    digitalWrite(LM2, HIGH);
+    digitalWrite(RM1, HIGH);
+    digitalWrite(RM2, LOW);
+    delay(160);
+  } else if (command == "RIGHT") {
+    digitalWrite(LM1, HIGH);
+    digitalWrite(LM2, LOW);
+    digitalWrite(RM1, LOW);
+    digitalWrite(RM2, HIGH);
+    delay(160);
+  } 
+
+  // Stop the car
+  if(command == "Stop") {
+    manualForward = false;
+    manualBackward = false;
+  }
+
+  // Stop the car if both forward and backward are active
+  if (manualForward == manualBackward){
+    manualForward = false;
+    manualBackward = false;
+  }
+
+  // Move the car according to the command
+  if(manualForward) {
+    digitalWrite(LM1, HIGH);
+    digitalWrite(LM2, LOW);
+    digitalWrite(RM1, HIGH);
+    digitalWrite(RM2, LOW);
+  } else if(manualBackward) {
+    digitalWrite(LM1, LOW);
+    digitalWrite(LM2, HIGH);
+    digitalWrite(RM1, LOW);
+    digitalWrite(RM2, HIGH);
+  } 
+
+  // Stop the car if no command is active
+  if(!manualForward && !manualBackward) {
+    digitalWrite(LM1, LOW);
+    digitalWrite(LM2, LOW);
+    digitalWrite(RM1, LOW);
+    digitalWrite(RM2, LOW);
+  }
 }
