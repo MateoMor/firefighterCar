@@ -12,10 +12,10 @@
 
 /*-------defining Outputs------*/
 #define LM1 13            // left motor
-#define LM2 12            // left motor
+#define LM2 19            // left motor
 #define RM1 26            // right motor
 #define RM2 27            // right motor
-#define pump 25           // pump
+#define pump 21           // pump
 #define servoPin 23       // servo
 
 /*-------Variables------*/
@@ -139,6 +139,7 @@ void automaticMode() {
 */
 
   if (areAllUp()) {
+    Serial.write("1");
     digitalWrite(LM1, LOW);
     digitalWrite(LM2, LOW);
     digitalWrite(RM1, LOW);
@@ -155,6 +156,7 @@ void automaticMode() {
     }
   } 
   else if (digitalRead(Left_S) == 0 && digitalRead(Right_S) == 0) {
+    Serial.write("2");
     digitalWrite(LM1, LOW);
     digitalWrite(LM2, HIGH);
     digitalWrite(RM1, LOW);
@@ -162,6 +164,7 @@ void automaticMode() {
     delay(800);
   }
   else if (digitalRead(Left_S) == 0) {
+    Serial.write("3");
     digitalWrite(LM1, LOW);
     digitalWrite(LM2, LOW);
     digitalWrite(RM1, HIGH);
@@ -169,6 +172,7 @@ void automaticMode() {
     // Serial.println("Fuego detectado a la izquierda. Moviendo hacia la izquierda.");
   } 
   else if (digitalRead(Right_S) == 0) {
+    Serial.write("4");
     digitalWrite(LM1, HIGH);
     digitalWrite(LM2, LOW);
     digitalWrite(RM1, LOW);
@@ -176,12 +180,14 @@ void automaticMode() {
     // Serial.println("Fuego detectado a la derecha. Moviendo hacia la derecha.");
   } 
   else if (digitalRead(Forward_S) == 0) {
+    Serial.write("5");
     digitalWrite(LM1, HIGH);
     digitalWrite(LM2, LOW);
     digitalWrite(RM1, HIGH);
     digitalWrite(RM2, LOW);
     // Serial.println("Fuego detectado al frente. Moviendo hacia adelante.");
   } else {
+    Serial.write("6");
     digitalWrite(LM1, LOW);
     digitalWrite(LM2, LOW);
     digitalWrite(RM1, LOW);
