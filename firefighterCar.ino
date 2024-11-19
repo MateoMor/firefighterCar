@@ -85,19 +85,27 @@ void loop() {
 void put_off_fire() {
   Serial.println("Apagando fuego...");
   digitalWrite(pump, HIGH); 
-  delay(500);
+  delay(120);
+
+  short delayTime = 5;
   
   for (pos = 50; pos <= 130; pos += 1) {
     servo.write(pos);
-    delay(12);
+    delay(delayTime);
   }
   
   for (pos = 130; pos >= 50; pos -= 1) {
     servo.write(pos);
-    delay(12);
+    delay(delayTime);
+  }
+
+  for (pos = 50; pos < 90; pos += 1) {
+    servo.write(pos);
+    delay(delayTime);
   }
 
   digitalWrite(pump, LOW);
+  
   servo.write(90);
   Serial.println("Agua dispensada");
 }
@@ -121,7 +129,7 @@ String readBluetoothMessage() {
 }
 
 void automaticMode() {
-  servo.write(90);
+  //servo.write(90);
 
 /*
   int leftState = digitalRead(Left_S);
@@ -238,6 +246,10 @@ void manualMode(String command) {
   if(command == "Stop") {
     manualForward = false;
     manualBackward = false;
+  }
+
+  if(command == "OFF_fire"){
+    put_off_fire();
   }
 
   // Stop the car if both forward and backward are active
